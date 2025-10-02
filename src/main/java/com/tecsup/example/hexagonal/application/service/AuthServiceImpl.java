@@ -4,6 +4,7 @@ import com.tecsup.example.hexagonal.application.port.input.AuthService;
 import com.tecsup.example.hexagonal.application.port.output.UserRepository;
 import com.tecsup.example.hexagonal.domain.model.User;
 import com.tecsup.example.hexagonal.infrastructure.adapter.input.rest.dto.AuthResponse;
+import com.tecsup.example.hexagonal.infrastructure.adapter.output.secutiry.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -12,6 +13,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenPovider;
 
     @Override
     public AuthResponse login(String email, String password) {
@@ -22,6 +24,11 @@ public class AuthServiceImpl implements AuthService {
         // Find user by email
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+
+        // Is user enable?
+        if(!user.isEnabled())
+            throw new IllegalStateException("User is disabled");
+
 
         // Check password
         String passwordEncrypted = user.getPassword();
@@ -40,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String generateToken(User user) {
-        return "3423uy51295y1hrjh72342394yc";
+        return jwtTokenPovider.generateToken(user);
     }
 
 

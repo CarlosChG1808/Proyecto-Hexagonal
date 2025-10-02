@@ -29,7 +29,13 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         log.info("login attempt for email: {}", request.getEmail());
         log.info("login attempt for password: {}", request.getPassword());
-        AuthResponse authResponse = authService.login(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(authResponse);
+        try{
+            AuthResponse authResponse = authService.login(request.getEmail(), request.getPassword());
+            return ResponseEntity.ok(authResponse);
+        }catch(Exception e){
+            log.error("Erros durin login: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }
