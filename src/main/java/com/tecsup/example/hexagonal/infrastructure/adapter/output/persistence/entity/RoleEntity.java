@@ -7,28 +7,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name = "roles")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+public class RoleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 150)
-    private String email;
+    private String description;
 
-    private String password;
-
-    @Column(name = "enabled", nullable = false)
-    private boolean enabled;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn
-    private RoleEntity role;
 }

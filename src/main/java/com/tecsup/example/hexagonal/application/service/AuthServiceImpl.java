@@ -13,7 +13,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenPovider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public AuthResponse login(String email, String password) {
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String generateToken(User user) {
-        return jwtTokenPovider.generateToken(user);
+        return jwtTokenProvider.generateToken(user);
     }
 
 

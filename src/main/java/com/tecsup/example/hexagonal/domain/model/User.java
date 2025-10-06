@@ -1,14 +1,12 @@
 package com.tecsup.example.hexagonal.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User {
 
     private Long id;
@@ -16,6 +14,8 @@ public class User {
     private String email;
     private String password;
     private boolean enabled;
+
+    private Role role;
 
     // Business logic methods - PURE domain logic!
     public boolean hasValidEmail() {
