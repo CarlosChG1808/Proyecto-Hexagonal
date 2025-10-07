@@ -1,0 +1,6 @@
+
+ALTER TABLE users
+    ADD COLUMN mother_last_name VARCHAR(100),
+ADD COLUMN age INT,
+ADD COLUMN dni VARCHAR(8) NOT NULL UNIQUE,
+ADD COLUMN phone_number VARCHAR(15);

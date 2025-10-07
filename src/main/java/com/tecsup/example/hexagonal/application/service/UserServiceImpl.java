@@ -8,6 +8,8 @@ import com.tecsup.example.hexagonal.domain.model.Role;
 import com.tecsup.example.hexagonal.domain.model.User;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -32,8 +34,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
-
     @Override
     public User findUser(Long id) {
 
@@ -47,6 +47,37 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public User findByLastName(String lastName) {
+        if (lastName == null || lastName.isEmpty()) {
+            throw new IllegalArgumentException("Last name cannot be empty");
+        }
+        User user = this.userRepository.findByLastName(lastName)
+                .orElseThrow(() -> new UserNotFoundException("User not found with last name" + lastName));
+        return user;
+    }
+
+    @Override
+    public User findByDni(String dni) {
+        if (dni == null || dni.isEmpty()) {
+            throw new IllegalArgumentException("Dni cannot be empty");
+        }
+
+        User user = this.userRepository.findByDni(dni)
+                .orElseThrow(() -> new UserNotFoundException("User not found with dni" + dni));
+        return user;
+    }
+
+
+    @Override
+    public List<User> findByAgeLessThan(Integer age) {
+        if (age == null || age <= 0) {
+            throw new IllegalArgumentException("Age must be greater than 0");
+        }
+
+        List<User> user = this.userRepository.findByAgeLessThan(age);
+        return user;
+    }
 
     private void validateUserInput(User newUser) {
 
@@ -56,6 +87,7 @@ public class UserServiceImpl implements UserService {
         if (!newUser.hasValidEmail())
             throw new InvalidUserDataException("Invalid email");
 
-
+        if (!newUser.hasValidDni())
+            throw new InvalidUserDataException("Invalid dni");
     }
 }

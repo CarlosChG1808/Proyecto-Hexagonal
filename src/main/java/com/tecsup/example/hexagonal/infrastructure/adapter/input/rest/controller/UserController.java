@@ -15,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -72,6 +75,52 @@ public class UserController {
 
     }
 
+    @GetMapping("/search/lastname/{lastName}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponse> getUserByLastName(@PathVariable String lastName) {
+        try {
+            User user = this.userService.findByLastName(lastName);
+            UserResponse response = this.userMapper.toResponse(user);
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException e) {
+            log.warn("User not found with lastName: {}", lastName);
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("Error fetching user by lastName: {}", lastName, e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/search/dni/{dni}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponse> getUserByDni(@PathVariable String dni) {
+        try {
+            User user = this.userService.findByDni(dni);
+            UserResponse response = this.userMapper.toResponse(user);
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException e) {
+            log.warn("User not found with DNI: {}", dni);
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("Error fetching user by DNI: {}", dni, e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("search/age")
+    @PreAuthorize("hasRole('MONITOR')")
+    public ResponseEntity<List<UserResponse>> getUsersByAgeLessThan(@RequestParam Integer age) {
+        try {
+            List<User> users = this.userService.findByAgeLessThan(age);
+            List<UserResponse> responses = users.stream()
+                    .map(this.userMapper::toResponse)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(responses);
+        } catch (Exception e) {
+            log.error("Error fetching users with age less than: {}", age, e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 }
 

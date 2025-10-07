@@ -26,7 +26,7 @@ public class SpringSecurity {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
                         //.requestMatchers("/api/users/**").authenticated() //.permitAll()  // -> esto es para que permita sin autenticacion
-                        .requestMatchers("/api/users/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/api/users/**").hasAnyRole("USER","ADMIN","MONITOR")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
